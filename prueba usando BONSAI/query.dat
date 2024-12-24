@@ -1,0 +1,50 @@
+# BONNSAI configuration:
+#-----------------------
+# * Version: 1.1
+# * Search radius: 5
+# * Zero probability (for output only): 1e-10
+# * Output error ellipses?: 1
+# * Significance level: 0.05
+# * Initial rotational velocties: all
+# * Degrees of freedom: 1
+# * Resulting minimum required chi2: 3.8415
+# * Prior distributions:
+#        - Initial mass: 2 => Salpeter (1955)
+#        - Age: 0 => flat
+#        - Rot. velocity: 0 => flat
+#        - Metallicity: 0 => flat
+#
+# Query:
+#-------
+STELLAR-MODEL: BONN-LMC
+FORMAT:	ID	PDF_GAUSSIAN	LOGL	LOGL_SIGMA
+BS-06001204	PDF_GAUSSIAN	5	1
+MASS-PRIOR: 2
+VROT-PRIOR: 0
+AGE-PRIOR: 0
+Z-PRIOR: 0
+SIGNIFICANCE-LEVEL: 0.05
+VINIS: all
+OUTPUT-QUANTITIES-1D: AGE MINI VROTINI MACT TEFF LOGL R LOGG VROT HE C N O XHE
+OUTPUT-QUANTITIES-2D: AGE MINI VROTINI
+#
+# Best fitting model (smallest Chi^2):
+#-------------------------------------
+# AGE=0.0000 Myr, MINI=28.6000 Msun, VROTINI=361.0000 km/s
+#                     LOGL: OBS=5, MODEL=5, d=0.0000
+#                    TOTAL: d=0.0000
+#
+# Do the models reproduce the set of observables?
+#------------------------------------------------
+#          Resolution test: passed
+#                     LOGL: +, 2*<obs.-sigma>/<dLOGL>=2.00000/0.00067=3003.0
+#                    TOTAL: +, 2*<obs.-sigma>/<dTOTAL>=2.00000/0.02581=77.5
+#             PSO coverage: the stellar models cover ~77% of the 3sigma parameter space of the observables
+#          Hypothesis test: passed, chi2_min=0.0000 < 3.8415=chi2_max for 1 degrees of freedom, p-value=100.00%
+#      Post. predic. check: passed
+#                     LOGL: +, d=<pred.-obs.>=-1.26+/-1.18; p(d<0.0)=86%, p(d>0.0)=14%
+#
+#      -> searched within 19792815 stellar models
+#      -> elapsed time for star-search: 1095.05 sec. (Memory usage: 210.61 MB)
+#
+# EOF

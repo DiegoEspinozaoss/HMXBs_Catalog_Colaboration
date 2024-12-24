@@ -1,0 +1,116 @@
+# 1:Star-ID = BS-06001204
+# 2:Model-resolution = +
+# 3:PSO-fractional-coverage = 0.77
+# 4:Chi2-pvalue = 1.00
+# 5:Posterior-predictive-check = +
+# 6:d_LOGL = 0.0000
+# 7:d_TOTAL = 0.0000
+# 8:p(dLOGL<0) = 0.86
+# 9:p(dLOGL>0) = 0.14
+# 10:mean(dLOGL) = -1.26
+# 11:sig(dLOGL) = 1.18
+# 12:Res.-test:<dTOTAL> = 0.02581
+# 13:Res.-test:2*<obs.-sigma>/<dTOTAL> = 77.5
+# 14:Res.-test:<dLOGL> = 0.00067
+# 15:Res.-test:2*<obs.-sigma>/<dLOGL> = 3003.0
+#
+# 16:AGE_mode_flag = +
+# 17:AGE_dispersion-of-avrgs/Myr = 8.81
+# 18:AGE_mode/Myr = 1.88
+# 19:d+AGE_mode/Myr = 26.41
+# 20:d-AGE_mode/Myr = 1.89
+# 21:prob_AGE_mode/% = 68.3
+#
+# 22:C_mode_flag = !
+# 23:C_dispersion-of-avrgs/dex = 0.08
+# 24:C_mode/dex = 7.75
+# 25:d+C_mode/dex = 0.01
+# 26:d-C_mode/dex = 0.22
+# 27:prob_C_mode/% = 68.4
+#
+# 28:HE_mode_flag = +
+# 29:HE_dispersion-of-avrgs/dex = 0.01
+# 30:HE_mode/dex = 10.93
+# 31:d+HE_mode/dex = 0.02
+# 32:d-HE_mode/dex = 0.01
+# 33:prob_HE_mode/% = 69.1
+#
+# 34:LOGG_mode_flag = +
+# 35:LOGG_dispersion-of-avrgs/log(cm/s^2) = 0.10
+# 36:LOGG_mode/log(cm/s^2) = 4.19
+# 37:d+LOGG_mode/log(cm/s^2) = 0.15
+# 38:d-LOGG_mode/log(cm/s^2) = 0.39
+# 39:prob_LOGG_mode/% = 68.3
+#
+# 40:LOGL_mode_flag = +
+# 41:LOGL_dispersion-of-avrgs/log(Lsun) = 0.23
+# 42:LOGL_mode/log(Lsun) = 3.20
+# 43:d+LOGL_mode/log(Lsun) = 0.85
+# 44:d-LOGL_mode/log(Lsun) = 0.26
+# 45:prob_LOGL_mode/% = 68.3
+#
+# 46:MACT_mode_flag = !
+# 47:MACT_dispersion-of-avrgs/Msun = 2.04
+# 48:MACT_mode/Msun = 5.00
+# 49:d+MACT_mode/Msun = 4.78
+# 50:d-MACT_mode/Msun = 0.16
+# 51:prob_MACT_mode/% = 68.4
+#
+# 52:MINI_mode_flag = +
+# 53:MINI_dispersion-of-avrgs/Msun = 2.13
+# 54:MINI_mode/Msun = 5.00
+# 55:d+MINI_mode/Msun = 4.87
+# 56:d-MINI_mode/Msun = 0.10
+# 57:prob_MINI_mode/% = 68.3
+#
+# 58:N_mode_flag = +
+# 59:N_dispersion-of-avrgs/dex = 0.26
+# 60:N_mode/dex = 6.90
+# 61:d+N_mode/dex = 0.84
+# 62:d-N_mode/dex = 0.01
+# 63:prob_N_mode/% = 68.3
+#
+# 64:O_mode_flag = !
+# 65:O_dispersion-of-avrgs/dex = 0.03
+# 66:O_mode/dex = 8.35
+# 67:d+O_mode/dex = 0.01
+# 68:d-O_mode/dex = 0.03
+# 69:prob_O_mode/% = 68.4
+#
+# 70:R_mode_flag = +
+# 71:R_dispersion-of-avrgs/Rsun = 1.97
+# 72:R_mode/Rsun = 6.08
+# 73:d+R_mode/Rsun = 5.47
+# 74:d-R_mode/Rsun = 6.08
+# 75:prob_R_mode/% = 69.7
+#
+# 76:TEFF_mode_flag = +
+# 77:TEFF_dispersion-of-avrgs/K = 1533.73
+# 78:TEFF_mode/K = 18790.58
+# 79:d+TEFF_mode/K = 6348.95
+# 80:d-TEFF_mode/K = 3118.11
+# 81:prob_TEFF_mode/% = 68.3
+#
+# 82:VROT_mode_flag = +
+# 83:VROT_dispersion-of-avrgs/km/s = 33.03
+# 84:VROT_mode/km/s = 350.00
+# 85:d+VROT_mode/km/s = 142.84
+# 86:d-VROT_mode/km/s = 340.99
+# 87:prob_VROT_mode/% = 88.4
+#
+# 88:VROTINI_mode_flag = !
+# 89:VROTINI_dispersion-of-avrgs/km/s = 113.06
+# 90:VROTINI_mode/km/s = 530.00
+# 91:d+VROTINI_mode/km/s = 0.00
+# 92:d-VROTINI_mode/km/s = 0.00
+# 93:prob_VROTINI_mode/% = 96.7
+#
+# 94:XHE_mode_flag = +
+# 95:XHE_dispersion-of-avrgs/dex = 0.01
+# 96:XHE_mode/dex = 0.26
+# 97:d+XHE_mode/dex = 0.01
+# 98:d-XHE_mode/dex = 0.00
+# 99:prob_XHE_mode/% = 68.4
+#
+# 1:Star-ID	2:Model-resolution	3:PSO-fractional-coverage	4:Chi2-pvalue	5:Posterior-predictive-check	6:d_LOGL	7:d_TOTAL	8:p(dLOGL<0)	9:p(dLOGL>0)	10:mean(dLOGL)	11:sig(dLOGL)	12:Res.-test:<dTOTAL>	13:Res.-test:2*<obs.-sigma>/<dTOTAL>	14:Res.-test:<dLOGL>	15:Res.-test:2*<obs.-sigma>/<dLOGL>	16:AGE_mode_flag	17:AGE_dispersion-of-avrgs/Myr	18:AGE_mode/Myr	19:d+AGE_mode/Myr	20:d-AGE_mode/Myr	21:prob_AGE_mode/%	22:C_mode_flag	23:C_dispersion-of-avrgs/dex	24:C_mode/dex	25:d+C_mode/dex	26:d-C_mode/dex	27:prob_C_mode/%	28:HE_mode_flag	29:HE_dispersion-of-avrgs/dex	30:HE_mode/dex	31:d+HE_mode/dex	32:d-HE_mode/dex	33:prob_HE_mode/%	34:LOGG_mode_flag	35:LOGG_dispersion-of-avrgs/log(cm/s^2)	36:LOGG_mode/log(cm/s^2)	37:d+LOGG_mode/log(cm/s^2)	38:d-LOGG_mode/log(cm/s^2)	39:prob_LOGG_mode/%	40:LOGL_mode_flag	41:LOGL_dispersion-of-avrgs/log(Lsun)	42:LOGL_mode/log(Lsun)	43:d+LOGL_mode/log(Lsun)	44:d-LOGL_mode/log(Lsun)	45:prob_LOGL_mode/%	46:MACT_mode_flag	47:MACT_dispersion-of-avrgs/Msun	48:MACT_mode/Msun	49:d+MACT_mode/Msun	50:d-MACT_mode/Msun	51:prob_MACT_mode/%	52:MINI_mode_flag	53:MINI_dispersion-of-avrgs/Msun	54:MINI_mode/Msun	55:d+MINI_mode/Msun	56:d-MINI_mode/Msun	57:prob_MINI_mode/%	58:N_mode_flag	59:N_dispersion-of-avrgs/dex	60:N_mode/dex	61:d+N_mode/dex	62:d-N_mode/dex	63:prob_N_mode/%	64:O_mode_flag	65:O_dispersion-of-avrgs/dex	66:O_mode/dex	67:d+O_mode/dex	68:d-O_mode/dex	69:prob_O_mode/%	70:R_mode_flag	71:R_dispersion-of-avrgs/Rsun	72:R_mode/Rsun	73:d+R_mode/Rsun	74:d-R_mode/Rsun	75:prob_R_mode/%	76:TEFF_mode_flag	77:TEFF_dispersion-of-avrgs/K	78:TEFF_mode/K	79:d+TEFF_mode/K	80:d-TEFF_mode/K	81:prob_TEFF_mode/%	82:VROT_mode_flag	83:VROT_dispersion-of-avrgs/km/s	84:VROT_mode/km/s	85:d+VROT_mode/km/s	86:d-VROT_mode/km/s	87:prob_VROT_mode/%	88:VROTINI_mode_flag	89:VROTINI_dispersion-of-avrgs/km/s	90:VROTINI_mode/km/s	91:d+VROTINI_mode/km/s	92:d-VROTINI_mode/km/s	93:prob_VROTINI_mode/%	94:XHE_mode_flag	95:XHE_dispersion-of-avrgs/dex	96:XHE_mode/dex	97:d+XHE_mode/dex	98:d-XHE_mode/dex	99:prob_XHE_mode/%
+BS-06001204	+	0.77	1.00	+	0.0000	0.0000	0.86	0.14	-1.26	1.18	0.02581	77.5	0.00067	3003.0	+	8.81	1.88	26.41	1.89	68.3	!	0.08	7.75	0.01	0.22	68.4	+	0.01	10.93	0.02	0.01	69.1	+	0.10	4.19	0.15	0.39	68.3	+	0.23	3.20	0.85	0.26	68.3	!	2.04	5.00	4.78	0.16	68.4	+	2.13	5.00	4.87	0.10	68.3	+	0.26	6.90	0.84	0.01	68.3	!	0.03	8.35	0.01	0.03	68.4	+	1.97	6.08	5.47	6.08	69.7	+	1533.73	18790.58	6348.95	3118.11	68.3	+	33.03	350.00	142.84	340.99	88.4	!	113.06	530.00	0.00	0.00	96.7	+	0.01	0.26	0.01	0.00	68.4
