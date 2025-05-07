@@ -8,8 +8,8 @@ In this work, we address the problem of missing data in astronomical catalogs (F
 
 Obviously, we can use Interpolation, but it's more useful when it's applied to spatial or temporal data (not this case). 
 
-Some questions: ¿Is it necessary to use oversampling, subsampling? ¿Do we wanna scale some variables?
-
+Some questions: ¿Is it necessary to use oversampling, subsampling? ¿Do we wanna scale some variables? ¿Is it necessary to assume some form for the distributions of the variables with missing values? ¿Does the correlations affect the imputation in some way?
+¿Do we want that the correlation coefficients between the variables stay almost the same before and after the imputation methods?
 For the decision making of the approach, we can take in consideration 
     - the missing value percentage per variable (see this papers for 10-25% level of missing values: [the first](https://arxiv.org/abs/2109.04227) and [the second one](https://arxiv.org/abs/2403.14687), while for 20%-80% level see this [another one](https://pmc.ncbi.nlm.nih.gov/articles/PMC8426774/?utm_source=chatgpt.com))
     - the total amount of data 
