@@ -34,7 +34,7 @@ Besides, we can impute/obtain the missing values of the categorical & numerical 
                 - Stan / CmdStanPy: ver powerful for complex hierarchical models.
                 - Bilby (Bayesian Inference library): used in gravitational waves.
             - MICE / Iterative Imputer 
-            - Machine Learning tools (from the [paper](https://peerj.com/articles/cs-619/)): 
+            - Machine Learning tools (from the [paper](https://peerj.com/articles/cs-619/) ): 
                 Here we can use the metrics RMSE, NRMSE and MAE for evaluating weather the imputed values fit well the original values:
                 - KNN, Mean, SoftImpute, SVDimpute, Iterative Imputation, EMI, DMI, KDMI, KEMI, KEMI+, KI & FCKI.
                 Also, we can compare the methods in respect to the accuracy value of a classification model as Decision Tree Classifier.
