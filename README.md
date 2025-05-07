@@ -2,9 +2,9 @@
 
 
 
-> Abstract
+Abstract
 
-> In this work, we address the problem of missing data in astronomical catalogs (Fortin, Neumann, Malacaria, etc.) by evaluating and comparing different imputation strategies tailored for datasets with both numerical and categorical variables. Classical methods such as mean/mode imputation are used as baselines, while more sophisticated techniques including k-nearest neighbors (kNN), Bayesian methods via Markov Chain Monte Carlo (e.g., emcee), and low-rank matrix completion (SoftImpute, SVD) are applied to numeric variables. For categorical variables, probabilistic models and decision-tree-based methods are considered. Furthermore, integrated approaches—such as Autoencoders and Generative Adversarial Imputation Networks (GAIN)—are explored to jointly handle mixed-type variables by learning latent representations. The performance of these imputers is quantitatively assessed using metrics such as RMSE, MAE, and categorical agreement, with model selection guided by the proportion of missing data per variable, the total dataset size, and the expected computational cost.
+In this work, we address the problem of missing data in astronomical catalogs (Fortin, Neumann, Malacaria, etc.) by evaluating and comparing different imputation strategies tailored for datasets with both numerical and categorical variables. Classical methods such as mean/mode imputation are used as baselines, while more sophisticated techniques including k-nearest neighbors (kNN), Bayesian methods via Markov Chain Monte Carlo (e.g., emcee), and low-rank matrix completion (SoftImpute, SVD) are applied to numeric variables. For categorical variables, probabilistic models and decision-tree-based methods are considered. Furthermore, integrated approaches—such as Autoencoders and Generative Adversarial Imputation Networks (GAIN)—are explored to jointly handle mixed-type variables by learning latent representations. The performance of these imputers is quantitatively assessed using metrics such as RMSE, MAE, and categorical agreement, with model selection guided by the proportion of missing data per variable, the total dataset size, and the expected computational cost.
 
 Obviously, we can use Interpolation, but it's more useful when it's applied to spatial or temporal data (not this case). 
 
@@ -18,32 +18,27 @@ For the decision making of the approach, we can take in consideration
 
 Besides, we can impute/obtain the missing values of the categorical & numerical parameters together or separately. 
 
-    Separately:
-
-        1. we can use OneHotEncoder and then use KNN for imputing the mode of the correspondent cluster of the Class / Categorical variable:
-            - Mode
-            - Probabilistic Models (Naive Bayes)
-            - Decision Trees
-
-
-        2. we can obtain the numerical data alone via 2 methods:
-            - Bayesian Aproach: them can be used weather to estimate the galactic/stellar parameters (stellar mass, age, metalicity, extinction by MCMC), modeling of light curves or Cosmologic Inference (matter density, Hubble Constant or spectral index):
-                - Using EMCEE package and its libraries.
-                - PyMC: general probabilistic modeling
-                - Dynesty / Multinest: nested sampling for calculating of bayesian evidence.
-                - Stan / CmdStanPy: ver powerful for complex hierarchical models.
-                - Bilby (Bayesian Inference library): used in gravitational waves.
-            - MICE / Iterative Imputer 
-            - Machine Learning tools (from the [paper](https://peerj.com/articles/cs-619/) ): 
-                Here we can use the metrics RMSE, NRMSE and MAE for evaluating weather the imputed values fit well the original values:
-                - KNN, Mean, SoftImpute, SVDimpute, Iterative Imputation, EMI, DMI, KDMI, KEMI, KEMI+, KI & FCKI.
-                Also, we can compare the methods in respect to the accuracy value of a classification model as Decision Tree Classifier.
-
-    Or together: 
-
-        1. Autoencoders (DAE, VAE):
-        2. GANS for imputation:
-        3. Integrated models as DMI, EMI, KEMI
+Separately:
+    1. we can use OneHotEncoder and then use KNN for imputing the mode of the correspondent cluster of the Class / Categorical variable:
+        - Mode
+        - Probabilistic Models (Naive Bayes)
+        - Decision Trees
+    2. we can obtain the numerical data alone via 2 methods:
+        - Bayesian Aproach: them can be used weather to estimate the galactic/stellar parameters (stellar mass, age, metalicity, extinction by MCMC), modeling of light curves or Cosmologic Inference (matter density, Hubble Constant or spectral index):
+            - Using EMCEE package and its libraries.
+            - PyMC: general probabilistic modeling
+            - Dynesty / Multinest: nested sampling for calculating of bayesian evidence.
+            - Stan / CmdStanPy: ver powerful for complex hierarchical models.
+            - Bilby (Bayesian Inference library): used in gravitational waves.
+        - MICE / Iterative Imputer 
+        - Machine Learning tools (from the [paper](https://peerj.com/articles/cs-619/) ): 
+            Here we can use the metrics RMSE, NRMSE and MAE for evaluating weather the imputed values fit well the original values:
+            - KNN, Mean, SoftImpute, SVDimpute, Iterative Imputation, EMI, DMI, KDMI, KEMI, KEMI+, KI & FCKI.
+            Also, we can compare the methods in respect to the accuracy value of a classification model as Decision Tree Classifier.
+Or together: 
+    1. Autoencoders (DAE, VAE):
+    2. GANS for imputation:
+    3. Integrated models as DMI, EMI, KEMI
 
 
 
