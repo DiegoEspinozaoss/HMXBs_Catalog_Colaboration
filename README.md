@@ -5,16 +5,14 @@ Abstract
 
 In this work, we address the problem of missing data in astronomical catalogs (Fortin, Neumann, Malacaria, etc.) by evaluating and comparing different imputation strategies tailored for datasets with both numerical and categorical variables. Classical methods such as mean/mode imputation are used as baselines, while more sophisticated techniques including k-nearest neighbors (kNN), Bayesian methods via Markov Chain Monte Carlo (e.g., emcee), and low-rank matrix completion (SoftImpute, SVD) are applied to numeric variables. For categorical variables, probabilistic models and decision-tree-based methods are considered. Furthermore, integrated approaches—such as Autoencoders and Generative Adversarial Imputation Networks (GAIN)—are explored to jointly handle mixed-type variables by learning latent representations. The performance of these imputers is quantitatively assessed using metrics such as RMSE, MAE, and categorical agreement, with model selection guided by the proportion of missing data per variable, the total dataset size, and the expected computational cost.
 
-----
-
 Besides, we can impute/obtain the missing values of the categorical & numerical parameters together or separately. For the decision making of the approach, we can take in consideration the missing value percentage per variable, the total amount of data, the nature of the missing values and an acceptable computational complexity:
 
-    1. Separately:
+    Separately:
 
         1. we can use OneHotEncoder and then use KNN for imputing the mode of the correspondent cluster of the Class / Categorical variable:
-            * Mode
-            * Probabilistic Models (Naive Bayes)
-            * Decision Trees
+            - Mode
+            - Probabilistic Models (Naive Bayes)
+            - Decision Trees
 
 
         2. we can obtain the numerical data alone via 2 methoc:
@@ -25,12 +23,12 @@ Besides, we can impute/obtain the missing values of the categorical & numerical 
                 - Stan / CmdStanPy: ver powerful for complex hierarchical models.
                 - Bilby (Bayesian Inference library): used in gravitational waves.
             * MICE / Iterative Imputer 
-            * Machine Learning tools (from the [paper](https://peerj.com/articles/cs-619/?utm_source=chatgpt.com)): 
+            * Machine Learning tools (from the [paper](https://peerj.com/articles/cs-619/)): 
                 Here we can use the metrics RMSE, NRMSE and MAE for evaluating weather the imputed values fit well the original values:
                 - KNN, Mean, SoftImpute, SVDimpute, Iterative Imputation, EMI, DMI, KDMI, KEMI, KEMI+, KI & FCKI.
                 Also, we can compare the methods in respect to the accuracy value of a classification model as Decision Tree Classifier.
 
-    2. Or together: 
+    Or together: 
 
         1. Autoencoders (DAE, VAE):
         2. GANS for imputation:
