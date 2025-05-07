@@ -122,3 +122,47 @@ AleRCE:
 Complex fractal analysis:
 
 - [Evolution of fractality in space plasmas of interest to geomagnetic activity](https://ui.adsabs.harvard.edu/abs/2018NPGeo..25..207M/abstract) and [Complex Network Study of Solar Magnetograms](https://ui.adsabs.harvard.edu/abs/2022Entrp..24..753M/abstract).
+
+----
+
+Questions that have guided my understanding:
+
+- In the case of the distances from GAIA DR3 do i have to query with the GAIA DR3 ID from neumann catalog?
+- In the case I use the BAT fluxes from actualized Neumann Catalog, do i take the BAT_min_flux or the BAT_max_flux? 
+- In the case I use the Swift Fluxes, Do I have to make a query to match all the objects in the Neumann+Fortin Catalog, right?
+- How do we usually select the priors for the observables in the prediction of the models (i.e. parameters) in the bayesian Tool?
+- Have you used the BONNSAI tool? For which cases? How do you use the BONNSAI tool for multiple systems simultaneously?
+- Which of the three kinds of masses I'm supposed to obtain from the catalogs (as the observables from Fortin+Neumann catalog), since i don't know the uncertainties of the effective temperature neither the uncertainties from the surface gravity (neither the mean of this), neither luminosities? 
+- Or do I have to obtain the luminosities from the Flux and then use them to predict the mass with BONNSAI?
+- When we talk about the luminosity of the HMXBs, we are talking about the luminosity of both objects like one object? Or we are talking about the Companion of the Neutron star alone?
+- Why in the Fig 5 Of Fortin the quantity of detected or identified spectral type increases? e.g. Be and sg.?
+- I was thinking, it's the imputing of the median an inadequate form of using the data for the kendall correlation matrix and the Dendograms because of the definition of the median when there are a even amount of data for a determined parameter as the effective temperature. Right?
+- It's possible to use the Bootstrap technique in some cases to determine the kendall Tau's coefficient with it's uncertainties? (e.g. with replacement)
+- How can i take into account the absortion in the line of sight?
+- There have to be a maximum distance because its contrary the flux have a minimum? When we say that a pulsar have a minimum flux, we are talking about a specific band in the Swift sensitivity?
+- What's the definition of near-infrared?
+- It's fine that the regime of the luminosities is for 14-195 keV?
+- It's fine to take the aritmetic mean of the min and max flux from bat in neumann catalog?
+- It's always the same to talk about the regime/energy band in the context of the X-ray energy emission? 
+- Why the near infrarred it's named like that?
+- Do make any sense if i want to take a Color-Magnitude diagram from the Neumann Catalog aparent magnitudes?
+- Why the near infrarred/X-ray/optical bands are called the counterparts?
+- How valid is it to extrapolate the terminal velocity and the mass loss rate?
+- For example, is it perhaps more valid than interpolating some known value from the parameters of the HMXBs themselves, such as the mass of the compact object?
+- Are we more interested in the Mass of the compact object or in the mass of the companion?
+- Does the terminal velocity refer to the terminal velocity of the pulsar traveling through the medium, or is it more related to the terminal velocity of the stellar wind from the companion star?
+- Which are the esential conditions to determine wether a compact object is a black hole?
+- Why were the number of Be in relation to Sg companions biased in the context of the Catalogs?
+- What we understand when we talk about the poblational studies?
+- In a catalog of these kind, are we any time interested in some kind of time series (as in the spin up-down of the systems) or in the graphics of flux versus wavelenght?
+- It's normal that the terminal velocity correlates the most with the mass loss rate in the super giant than in the Be stars like systems?
+- What is MJ2000? It's like the currently calendar of astronomers? Why?
+- What's the difference between the transient and Persistent HMXBs? Does it have relation with the persistent/transient accretion systems? So for example, in the Neumann and Fortin Catalogs are they transient and/or persistent HMXBs?
+- Can i extrapolate also the espectroscopic mass, radius *, log luminosity (log L) and T* from the six prototypical HMXBs?
+- Did we use the geometric mean between the max/min fluxes because they can be like 10 to the 10 power, and 10 to the 20?
+- The reason that the 10 to the 50 power isn't possible for the luminosity is because of the eddington limit? (which consist in the luminosity of a star when its gas pressure overpower the force of gravity?) Do the stars consequently, have a maximum effective temperature?
+- The Wolf-Rayet binary systems are O or B stars (in respect to the companion)
+- The reason for the difference in the correlation coefficients (spin period-orbital period) in the correlation matrix and Corbet diagram could be due to the fact that the corbet diagram is for all Fortin systems, while in the correlation matrix only the systems that are present in Neumann and Fortin (?) In other words, the coefficient is different because we are taking a subset of systems. Maybe i've introduced some bias in the analysis. 
+- When extrapolating the Spectral type should i take into account the fact that it has spectral class, subclass, luminosity class and aditional characteristics? For example, O8.5Ib-II(f)p where O is the spectral class, 8.5 is the subclass, Ib-II is the luminosity class and f & p are the aditional characteristics. So i have to consider this fact to make the extrapolation in first place. 
+- Its normal that for example some systems have 0.6 * 10**-12 and others 6.123.123.123.123.123 ergs/s/cm**2 in the XRT_min_flux and XRT_max_flux? That's probably the the reason of why i couln't reproduce Fortin Figure. 
+
