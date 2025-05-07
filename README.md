@@ -1,12 +1,10 @@
 <h1 align="center">High Mass X-Ray Binaries Catalogs Missing values Imputation</h1>
 
 
-<div style="border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
-<strong>Abstract</strong><br>
-Abstract
 
-In this work, we address the problem of missing data in astronomical catalogs (Fortin, Neumann, Malacaria, etc.) by evaluating and comparing different imputation strategies tailored for datasets with both numerical and categorical variables. Classical methods such as mean/mode imputation are used as baselines, while more sophisticated techniques including k-nearest neighbors (kNN), Bayesian methods via Markov Chain Monte Carlo (e.g., emcee), and low-rank matrix completion (SoftImpute, SVD) are applied to numeric variables. For categorical variables, probabilistic models and decision-tree-based methods are considered. Furthermore, integrated approaches—such as Autoencoders and Generative Adversarial Imputation Networks (GAIN)—are explored to jointly handle mixed-type variables by learning latent representations. The performance of these imputers is quantitatively assessed using metrics such as RMSE, MAE, and categorical agreement, with model selection guided by the proportion of missing data per variable, the total dataset size, and the expected computational cost.
-</div>
+> Abstract
+
+> In this work, we address the problem of missing data in astronomical catalogs (Fortin, Neumann, Malacaria, etc.) by evaluating and comparing different imputation strategies tailored for datasets with both numerical and categorical variables. Classical methods such as mean/mode imputation are used as baselines, while more sophisticated techniques including k-nearest neighbors (kNN), Bayesian methods via Markov Chain Monte Carlo (e.g., emcee), and low-rank matrix completion (SoftImpute, SVD) are applied to numeric variables. For categorical variables, probabilistic models and decision-tree-based methods are considered. Furthermore, integrated approaches—such as Autoencoders and Generative Adversarial Imputation Networks (GAIN)—are explored to jointly handle mixed-type variables by learning latent representations. The performance of these imputers is quantitatively assessed using metrics such as RMSE, MAE, and categorical agreement, with model selection guided by the proportion of missing data per variable, the total dataset size, and the expected computational cost.
 
 Obviously, we can use Interpolation, but it's more useful when it's applied to spatial or temporal data (not this case). 
 
