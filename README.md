@@ -34,7 +34,7 @@ Besides, we can impute/obtain the missing values of the categorical & numerical 
         - **PyMC**: General probabilistic modeling.
         - **Dynesty / Multinest**: Nested sampling for calculating Bayesian evidence.
         - **Stan / CmdStanPy**: Very powerful for complex hierarchical models.
-        - **Bilby** (Bayesian Inference library): Used in gravitational waves.
+        - **Bilby** (Bayesian Inference library): Used in gravitatilsonal waves.
 
     - **MICE / Iterative Imputer**
     - **Machine Learning tools** (from the [paper](https://peerj.com/articles/cs-619/)): 
@@ -103,6 +103,8 @@ For imputation
 
 - [Applied Machine-Learning Models to Identify Spectral Sub-Types of M Dwarfs from Photometric Surveys](https://iopscience.iop.org/article/10.1088/1538-3873/acc974/pdf) 
 - [Advanced methods for missing values imputation based on similarity learning, Khaled M. Fouad, Mahmoud M. Ismail, Ahmad Taher Azar and Mona M. Arafa](https://peerj.com/articles/cs-619/)
+
+- [Categorical Values: Knowledge Distillation](https://en.wikipedia.org/wiki/Knowledge_distillation)
 
 EMCEE:
 
