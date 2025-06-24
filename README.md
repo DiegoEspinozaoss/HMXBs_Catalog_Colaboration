@@ -60,6 +60,10 @@ Besides, we can impute/obtain the missing values of the categorical & numerical 
 
 ### To understand 
 
+THE PAPER FOR MISSINGNESS IN GENERAL:
+- [Identify the most appropriate imputation method for handling missing values in clinical structured datasets: a systematic review](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-024-02310-6)
+
+
 The meaning of Hardness:
 - [Variable structures in the stellar wind of the HMXB Vela X-1](https://arxiv.org/pdf/2410.21456)
 - [Observing the onset of the accretion wake in Vela X-1](https://www.aanda.org/articles/aa/pdf/2023/06/aa45708-22.pdf)
