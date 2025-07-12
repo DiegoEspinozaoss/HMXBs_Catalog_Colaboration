@@ -60,8 +60,11 @@ Besides, we can impute/obtain the missing values of the categorical & numerical 
 
 ### To understand 
 
+Algo que podria hacer es intentar hacer aumentación de datos, averiguar si es posible.
+
+
 THE PAPER FOR MISSINGNESS IN GENERAL:
-- [Identify the most appropriate imputation method for handling missing values in clinical structured datasets: a systematic review](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-024-02310-6)
+- [Identify the most appropriate imputation method for handling missing values in clinical structured datasets: a systematic review](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-0ls24-02310-6)
 
 
 The meaning of Hardness:

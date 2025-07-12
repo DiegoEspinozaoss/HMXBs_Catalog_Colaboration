@@ -1,123 +1,151 @@
-#%%
+
 from Load_data_functions import load_catalogs
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
 
-catalogs = load_catalogs()
-cat_fortin = catalogs['cat_fortin']
 
-#%%
-#Not interested in the following columns 
-columns_not_interesting = ['ID', 'Name', 'ref', 'Ref', 'err', 'RA', 'Dec', 'var', 'Err', 'DE']
-#%%
-#First Plot: Number of systems for a given number of missing parameters
+def plot_missing_values_distribution(catalog, exclude_columns):
+    """
+    Plots the distribution of systems by the number of missing numerical parameters.
 
-cat_fortin = catalogs['cat_fortin']
+    Parameters:
+    - catalog (pd.DataFrame): The catalog dataframe to analyze.
+    - exclude_columns (list): List of column substrings to exclude from the analysis.
+    """
+    numeric_columns = [col for col in catalog.select_dtypes(include='number').columns
+                       if not any(substr in col for substr in exclude_columns)]
 
-numeric_columns = [col for col in cat_fortin.select_dtypes(include='number').columns
-                   if not any(substr in col for substr in columns_not_interesting)]
+    missing_counts = catalog[numeric_columns].isna().sum(axis=1)
+    hist_data = missing_counts.value_counts().sort_index()
 
-missing_counts = cat_fortin[numeric_columns].isna().sum(axis=1)
-hist_data = missing_counts.value_counts().sort_index()
+    plt.figure(figsize=(10, 6))
+    plt.bar(hist_data.index, hist_data.values, color='lightcoral', edgecolor='black')
+    plt.xlabel('Number of missing numerical parameters')
+    plt.ylabel('Number of systems')
+    plt.title('Distribution of systems by number of missing values (numerical variables)')
+    plt.xticks(hist_data.index)
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+    plt.tight_layout()
+    plt.show()
 
-plt.figure(figsize=(10, 6))
-plt.bar(hist_data.index, hist_data.values, color='lightcoral', edgecolor='black')
-plt.xlabel('Number of missing numerical parameters')
-plt.ylabel('Number of systems')
-plt.title('Distribution of systems by number of missing values (numerical variables)')
-plt.xticks(hist_data.index)
-plt.grid(axis='y', linestyle='--', alpha=0.6)
-plt.tight_layout()
-plt.show()
+    print(f"Number of numerical columns analyzed: {len(numeric_columns)}")
+    print(f"Columns considered:\n{numeric_columns}")
 
-print(f"Number of numerical columns analyzed: {len(numeric_columns)}")
-print(f"Columns considered:\n{numeric_columns}")
+def plot_missing_values_by_column(catalog, exclude_columns):
+    """
+    Plots the number of systems with missing values for each numerical parameter.
 
+    Parameters:
+    - catalog (pd.DataFrame): The catalog dataframe to analyze.
+    - exclude_columns (list): List of column substrings to exclude from the analysis.
+    """
+    numeric_columns = [col for col in catalog.select_dtypes(include='number').columns
+                       if not any(substr in col for substr in exclude_columns)]
 
+    missing_by_column = catalog[numeric_columns].isna().sum().sort_values(ascending=False)
 
+    plt.figure(figsize=(12, 6))
+    bars = plt.bar(missing_by_column.index, missing_by_column.values, color='skyblue', edgecolor='black')
 
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2, height + 0.5, f'{int(height)}',
+                 ha='center', va='bottom', fontsize=9)
 
+    plt.xticks(rotation=45, ha='right')
+    plt.ylabel('Cantidad de sistemas con valor nulo')
+    plt.title('Número de sistemas con valores faltantes por parámetro (variables numéricas)')
+    plt.grid(axis='y', linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.show()
 
+def plot_conditional_probability_matrix(catalog, exclude_columns):
+    """
+    Plots a heatmap showing the conditional probability of missing a parameter A
+    given that parameter B is also missing.
 
-#%%
-#Second Plot: Number of systems where a given system is missing 
+    Parameters:
+    - catalog (pd.DataFrame): The catalog dataframe to analyze.
+    - exclude_columns (list): List of column substrings to exclude from the analysis.
+    """
+    numeric_columns = [col for col in catalog.select_dtypes(include='number').columns
+                       if not any(substr in col for substr in exclude_columns)]
 
-cat_fortin = catalogs['cat_fortin']
+    missing_matrix = catalog[numeric_columns].isna().astype(int)
 
-numeric_columns = [col for col in cat_fortin.select_dtypes(include='number').columns
-                   if not any(substr in col for substr in columns_not_interesting)]
+    conditional_prob = pd.DataFrame(index=numeric_columns, columns=numeric_columns, dtype=float)
 
-missing_by_column = cat_fortin[numeric_columns].isna().sum().sort_values(ascending=False)
+    for a in numeric_columns:
+        for b in numeric_columns:
+            b_missing = missing_matrix[b] == 1
+            if b_missing.sum() == 0:
+                conditional_prob.loc[a, b] = np.nan
+            else:
+                conditional_prob.loc[a, b] = (missing_matrix[a][b_missing].sum()) / b_missing.sum()
 
-plt.figure(figsize=(12, 6))
-bars = plt.bar(missing_by_column.index, missing_by_column.values, color='skyblue', edgecolor='black')
-
-for bar in bars:
-    height = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width()/2, height + 0.5, f'{int(height)}',
-             ha='center', va='bottom', fontsize=9)
-
-plt.xticks(rotation=45, ha='right')
-plt.ylabel('Cantidad de sistemas con valor nulo')
-plt.title('Número de sistemas con valores faltantes por parámetro (variables numéricas)')
-plt.grid(axis='y', linestyle='--', alpha=0.5)
-plt.tight_layout()
-plt.show()
-
-
-#%%
-#The third plot: in which we can see the conditional probability of not seeing the parameter A, while we neither
-#see the parameter B.
-
-cat_fortin = catalogs['cat_fortin']
-
-numeric_columns = [col for col in cat_fortin.select_dtypes(include='number').columns
-                   if not any(substr in col for substr in columns_not_interesting)]
-
-missing_matrix = cat_fortin[numeric_columns].isna().astype(int)
-
-conditional_prob = pd.DataFrame(index=numeric_columns, columns=numeric_columns, dtype=float)
-
-for a in numeric_columns:
-    for b in numeric_columns:
-        b_missing = missing_matrix[b] == 1
-        if b_missing.sum() == 0:
-            conditional_prob.loc[a, b] = np.nan
-        else:
-            conditional_prob.loc[a, b] = (missing_matrix[a][b_missing].sum()) / b_missing.sum()
-
-plt.figure(figsize=(12, 10))
-sns.heatmap(conditional_prob.astype(float), annot=True, fmt=".2f", cmap="Reds", cbar_kws={'label': 'P(A missing | B missing)'})
-plt.title("Conditional Probability Matrix: P(A missing | B missing)")
-plt.xlabel("B (condition)")
-plt.ylabel("A (outcome)")
-plt.tight_layout()
-plt.show()
+    plt.figure(figsize=(12, 10))
+    sns.heatmap(conditional_prob.astype(float), annot=True, fmt=".2f", cmap="Reds", cbar_kws={'label': 'P(A missing | B missing)'})
+    plt.title("Conditional Probability Matrix: P(A missing | B missing)")
+    plt.xlabel("B (condition)")
+    plt.ylabel("A (outcome)")
+    plt.tight_layout()
+    plt.show()
 
 
+def highlight_missing_values(catalog, exclude_columns):
+    """
+    Highlights missing values in a sorted catalog based on the number of missing numerical parameters.
 
-#%%
-#The Fourth Plot: the highlighted missing values for the sorted-like fortin dataset, by the number of missing parameters
+    Parameters:
+    - catalog (pd.DataFrame): The catalog dataframe to analyze.
+    - exclude_columns (list): List of column substrings to exclude from the analysis.
 
-def highlight_missing(val):
-    return 'background-color: lightcoral' if pd.isna(val) else ''
+    Returns:
+    - pd.DataFrame.style: A styled dataframe with missing values highlighted.
+    """
+    def highlight_missing(val):
+        return 'background-color: lightcoral' if pd.isna(val) else ''
 
-cat_fortin_numeric = cat_fortin.select_dtypes(include='number')
+    numeric_columns = [
+        col for col in catalog.select_dtypes(include='number').columns
+        if not any(substr in col for substr in exclude_columns)
+    ]
+    catalog['missing_count'] = catalog[numeric_columns].isna().sum(axis=1)
 
-numeric_columns = [
-    col for col in cat_fortin_numeric.columns
-    if not any(substr in col for substr in columns_not_interesting)
-]
-cat_fortin['missing_count'] = cat_fortin[numeric_columns].isna().sum(axis=1)
-
-cat_fortin_sorted = cat_fortin.sort_values(by='missing_count', ascending=False).reset_index(drop=True)
-numeric_cols_copy = numeric_columns.copy()
-cat_fortin_sorted[numeric_cols_copy].style.applymap(highlight_missing)
+    catalog_sorted = catalog.sort_values(by='missing_count', ascending=False).reset_index(drop=True)
+    return catalog_sorted[numeric_columns].style.applymap(highlight_missing)
 
 
 
+def corbet_diagram(df):
+    spin_col = next((col for col in df.columns if col.startswith('Spin_Period') and col.endswith('_imputed')), None)
+    period_col = next((col for col in df.columns if col.startswith('Period') and col.endswith('_imputed')), None)
+    
+    if spin_col is None or period_col is None:
+        print("Columns with '_imputed' suffix for 'Spin_Period' or 'Period' not found.")
+        return
+    
+    df_valid = df.dropna(subset=[spin_col, period_col, 'Class'])
+    
+    plt.figure(figsize=(12, 6))
+    markers = ['o', 's', 'D', '^', 'v', '<', '>']
+    classes = np.unique(df_valid['Class'])
+
+    for i, cls in enumerate(classes):
+        class_data = df_valid[df_valid['Class'] == cls]
+        sns.scatterplot(x=spin_col, y=period_col, data=class_data,
+                        marker=markers[i % len(markers)], label=f'Class {cls}', alpha=0.6)
+
+    plt.title(f'Corbet Diagram for Fortin (final imputed data)')
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel(spin_col)
+    plt.ylabel(period_col)
+    plt.legend(title='Class', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    plt.tight_layout()
+    plt.show()
 
 
 
@@ -137,7 +165,7 @@ cat_fortin_sorted[numeric_cols_copy].style.applymap(highlight_missing)
 
 #         plt.figure(figsize=(8, 8))
 #         plt.pie(final_counts, labels=final_counts.index,
-#                 autopct='%1.1f%%', startangle=90,
+#                 autopct='%1.1f', startangle=90,
 #                 colors=plt.cm.tab20.colors[:len(final_counts)],
 #                 wedgeprops=dict(edgecolor='k'))
 
@@ -148,16 +176,16 @@ cat_fortin_sorted[numeric_cols_copy].style.applymap(highlight_missing)
 
 
 #     def Corbet_Diagram(self, df):
-#             df_valid = df.dropna(subset=['Spin_period', 'Period', 'Class'])
+#             df = df.dropna(subset=['Spin_period', 'Period', 'Class'])
 
-#             num_valid_systems = len(df_valid)
+#             num_valid_systems = len(df)
 
 #             plt.figure(figsize=(12, 6))
 #             markers = ['o', 's', 'D', '^', 'v', '<', '>']
-#             clases = np.unique(df_valid['Class'])
+#             clases = np.unique(df['Class'])
 
 #             for i, cls in enumerate(clases):
-#                 class_data = df_valid[df_valid['Class'] == cls]
+#                 class_data = df[df['Class'] == cls]
 #                 sns.scatterplot(x='Spin_period', y='Period', data=class_data,
 #                                 marker=markers[i % len(markers)], label=f'Clase {cls}', alpha=0.6)
 
@@ -199,9 +227,9 @@ cat_fortin_sorted[numeric_cols_copy].style.applymap(highlight_missing)
 
 #         markers = ['o', 's', 'D', '^', 'v', '<', '>']
 #         clases = np.unique(df['Class'])
-#         df_valid_imputed = df.dropna(subset=['Spin_period', 'Period', 'Class'])
+#         df_imputed = df.dropna(subset=['Spin_period', 'Period', 'Class'])
 
-#         num_valid_systems_imputed = len(df_valid_imputed)
+#         num_valid_systems_imputed = len(df_imputed)
 #         for i, cls in enumerate(clases):
 #             class_data = df[df['Class'] == cls]
 #             sns.scatterplot(x='Spin_period', y='Period', data=class_data,
@@ -330,7 +358,7 @@ cat_fortin_sorted[numeric_cols_copy].style.applymap(highlight_missing)
 #         plt.pie(
 #             aggregated_counts, 
 #             labels=aggregated_counts.index, 
-#             autopct='%1.1f%%', 
+#             autopct='%1.1f', 
 #             startangle=90, 
 #             colors=plt.cm.tab10.colors[:len(aggregated_counts)]
 #         )
