@@ -120,7 +120,7 @@ def highlight_missing_values(catalog, exclude_columns):
 
 
 def corbet_diagram(df):
-    spin_col = next((col for col in df.columns if col.startswith('Spin_Period') and col.endswith('_imputed')), None)
+    spin_col = next((col for col in df.columns if col.startswith('Spin_period') and col.endswith('_imputed')), None)
     period_col = next((col for col in df.columns if col.startswith('Period') and col.endswith('_imputed')), None)
     
     if spin_col is None or period_col is None:
