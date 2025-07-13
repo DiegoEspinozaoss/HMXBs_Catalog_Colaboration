@@ -127,14 +127,14 @@ def corbet_diagram(df):
         print("Columns with '_imputed' suffix for 'Spin_Period' or 'Period' not found.")
         return
     
-    df_valid = df.dropna(subset=[spin_col, period_col, 'Class'])
+    df_valid = df.dropna(subset=[spin_col, period_col, 'Class_original'])
     
     plt.figure(figsize=(12, 6))
     markers = ['o', 's', 'D', '^', 'v', '<', '>']
-    classes = np.unique(df_valid['Class'])
+    classes = np.unique(df_valid['Class_original'])
 
     for i, cls in enumerate(classes):
-        class_data = df_valid[df_valid['Class'] == cls]
+        class_data = df_valid[df_valid['Class_original'] == cls]
         sns.scatterplot(x=spin_col, y=period_col, data=class_data,
                         marker=markers[i % len(markers)], label=f'Class {cls}', alpha=0.6)
 
@@ -147,6 +147,37 @@ def corbet_diagram(df):
     plt.tight_layout()
     plt.show()
 
+
+def correlation_matrices(df_comparacion, numeric_cols_to_use):
+    correlation_methods = ['pearson', 'spearman', 'kendall']
+    
+    original_cols = [f'{col}_original' for col in numeric_cols_to_use]
+    imputed_cols = [f'{col}_imputed' for col in numeric_cols_to_use]
+    
+    df_original = df_comparacion[original_cols]
+    df_imputed = df_comparacion[imputed_cols]
+    
+    fig, axes = plt.subplots(2, 3, figsize=(14, 8), sharex='col', sharey='row')
+    
+    for i, method in enumerate(correlation_methods):
+        corr_orig = df_original.corr(method=method)
+        sns.heatmap(corr_orig, ax=axes[0, i], annot=True, cmap='coolwarm', fmt=".2f",
+                    cbar=False)
+        axes[0, i].set_title(f'{method.capitalize()}')
+        
+        corr_imputed = df_imputed.corr(method=method)
+        sns.heatmap(corr_imputed, ax=axes[1, i], annot=True, cmap='coolwarm', fmt=".2f",
+                    cbar=False)
+    
+    for ax in fig.get_axes():
+        ax.label_outer()
+    
+    axes[0, 0].set_ylabel("Original")
+    axes[1, 0].set_ylabel("Imputed")
+    
+    fig.suptitle("Matrices of Correlation (Original vs Imputed)", fontsize=16)
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+    plt.show()
 
 
 
@@ -256,20 +287,7 @@ def corbet_diagram(df):
 #         plt.show()
 
 
-#     def correlation_matrices(self, df_numeric):
-#         correlation_methods = ['pearson', 'spearman', 'kendall']
 
-#         fig, axes = plt.subplots(1, 3, figsize=(18, 5))
-
-#         for i, method in enumerate(correlation_methods):
-#             corr_matrix = df_numeric.corr(method=method)
-#             sns.heatmap(corr_matrix, ax=axes[i], annot=True, cmap='coolwarm', fmt=".2f", 
-#                         cbar=(i == 2))
-#             axes[i].set_title(f'Correlación ({method.capitalize()})')
-
-#         plt.suptitle('Matrices de Correlación - Variables Numéricas', fontsize=16)
-#         plt.tight_layout(rect=[0, 0, 1, 0.95])
-#         plt.show()
 
 
 

@@ -6,14 +6,23 @@ from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from Load_data_functions import load_catalogs
+from Load_data_functions import load_catalogs
+from Plots_functions import corbet_diagram
+import numpy as np
+import pandas as pd
+import optuna
+from IPython.display import display
+from Plots_functions import plot_missing_values_distribution, plot_missing_values_by_column, plot_conditional_probability_matrix, highlight_missing_values
+from Plots_functions import correlation_matrices
+
 
 
 catalogs = load_catalogs()
-fortin = catalogs['cat_fortin']
+df_catalog = catalogs['cat_fortin']
 
-numeric_cols_to_use = ['Mx', 'Mo', 'Period',  'Eccentricity', 'RV']#'Spin_period',
+numeric_cols_to_use = ['Mx', 'Mo', 'Period',  'Eccentricity', 'RV','Spin_period']
 categoric_col_to_use = ['Class']
-n_systems=20
+n_systems=150
 divisor = 10
 n_neighbours = 5
 
@@ -22,7 +31,7 @@ columns_to_consider = numeric_cols_to_use + categoric_col_to_use
 
 
 df_original = (
-    fortin[columns_to_consider]
+    df_catalog[columns_to_consider]
     .assign(non_null_count=lambda df: df.notna().sum(axis=1))
     .sort_values(by='non_null_count', ascending=False)
     .drop(columns='non_null_count')
@@ -143,7 +152,14 @@ display(styled)
 
 
 
-
-
+corbet_diagram(df_comparacion)
+correlation_matrices(df_comparacion, numeric_cols_to_use)
 
 #%%
+
+columns_not_interesting = ['ID', 'Name', 'ref', 'Ref', 'err', 'RA', 'Dec', 'var', 'Err', 'DE']
+
+plot_missing_values_distribution(df_catalog, columns_not_interesting)
+plot_missing_values_by_column(df_catalog, columns_not_interesting)
+plot_conditional_probability_matrix(df_catalog, columns_not_interesting)
+highlight_missing_values(df_catalog, columns_not_interesting)
