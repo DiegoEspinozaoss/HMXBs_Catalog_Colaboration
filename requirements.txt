@@ -9,3 +9,6 @@ ipywidgets
 venn
 scipy
 fancyimpute
+streamlit
+pandas
+openpyxl

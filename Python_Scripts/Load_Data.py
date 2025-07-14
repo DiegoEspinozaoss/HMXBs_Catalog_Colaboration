@@ -1,3 +1,4 @@
+#%%
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -9,8 +10,8 @@ def load_catalogs():
         dict: A dictionary containing the loaded datasets.
     """
     base_path = Path(__file__).resolve().parent.parent / "Datasets"
-    excel_name = base_path / "HMXB_catalogs.xlsx"
-    excel_name_2 = base_path / "HMXB_cat.xlsx"
+    excel_name = base_path / "All_four_catalogs.xlsx"
+    excel_name_2 = base_path / "Neumann_catalog_update.xlsx"
 
     excel_file = pd.ExcelFile(excel_name)
 
@@ -42,3 +43,5 @@ def load_catalogs():
         "cat_malacaria_transient": malacaria_transient,
         "cat_neuman_update": cat_neuman_update,
     }
+    
+load_catalogs()
