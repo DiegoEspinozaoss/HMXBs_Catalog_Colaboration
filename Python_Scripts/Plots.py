@@ -1,5 +1,3 @@
-
-from Load_data_functions import load_catalogs
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -33,6 +31,7 @@ def plot_missing_values_distribution(catalog, exclude_columns):
     print(f"Number of numerical columns analyzed: {len(numeric_columns)}")
     print(f"Columns considered:\n{numeric_columns}")
 
+
 def plot_missing_values_by_column(catalog, exclude_columns):
     """
     Plots the number of systems with missing values for each numerical parameter.
@@ -60,6 +59,7 @@ def plot_missing_values_by_column(catalog, exclude_columns):
     plt.grid(axis='y', linestyle='--', alpha=0.5)
     plt.tight_layout()
     plt.show()
+
 
 def plot_conditional_probability_matrix(catalog, exclude_columns):
     """
@@ -116,7 +116,6 @@ def highlight_missing_values(catalog, exclude_columns):
 
     catalog_sorted = catalog.sort_values(by='missing_count', ascending=False).reset_index(drop=True)
     return catalog_sorted[numeric_columns].style.applymap(highlight_missing)
-
 
 
 def corbet_diagram(df):
@@ -204,90 +203,6 @@ def correlation_matrices(df_comparacion, numeric_cols_to_use):
 #         plt.axis('equal')  
 #         plt.tight_layout()
 #         plt.show()
-
-
-#     def Corbet_Diagram(self, df):
-#             df = df.dropna(subset=['Spin_period', 'Period', 'Class'])
-
-#             num_valid_systems = len(df)
-
-#             plt.figure(figsize=(12, 6))
-#             markers = ['o', 's', 'D', '^', 'v', '<', '>']
-#             clases = np.unique(df['Class'])
-
-#             for i, cls in enumerate(clases):
-#                 class_data = df[df['Class'] == cls]
-#                 sns.scatterplot(x='Spin_period', y='Period', data=class_data,
-#                                 marker=markers[i % len(markers)], label=f'Clase {cls}', alpha=0.6)
-
-#             plt.title(f'Diagrama de Corbett para Fortin antes de la imputación: {num_valid_systems} sistemas')
-#             plt.xscale('log')
-#             plt.yscale('log')
-#             plt.xlabel('Spin_period')
-#             plt.ylabel('Period')
-#             plt.legend(title='Clase', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
-#             plt.tight_layout()
-#             plt.show()
-
-
-#     def Corbet_Diagram_new(self, df_class_original, nan_any_num_idx, df, imputacion_numerica, imputacion_class):
-#         indices_class_imputados = df_class_original[df_class_original.isna()].index
-#         indices_num_imputados = df.index[nan_any_num_idx]
-#         metodos_numericos = {
-#             '1': 'Media',
-#             '2': 'Mediana',
-#             '3': 'KNN',
-#             '4': 'Constante (0)',
-#             '5': 'SoftImpute',
-#             '6': 'Iterative SVD',
-#             '7': 'Iterative Imputer',
-#             '8': 'MICE',
-#         }
-
-#         metodos_categoricos = {
-#             '1': 'Media',
-#             '2': 'Mediana',
-#             '3': 'Moda',
-#             '4': 'KNN'
-#         }
-
-#         metodo_num = metodos_numericos.get(imputacion_numerica, 'Media (por defecto)')
-#         metodo_cat = metodos_categoricos.get(imputacion_class, 'Moda (por defecto)')
-
-#         plt.figure(figsize=(12, 6))
-
-#         markers = ['o', 's', 'D', '^', 'v', '<', '>']
-#         clases = np.unique(df['Class'])
-#         df_imputed = df.dropna(subset=['Spin_period', 'Period', 'Class'])
-
-#         num_valid_systems_imputed = len(df_imputed)
-#         for i, cls in enumerate(clases):
-#             class_data = df[df['Class'] == cls]
-#             sns.scatterplot(x='Spin_period', y='Period', data=class_data,
-#                             marker=markers[i % len(markers)], label=f'Clase {cls}', alpha=0.6)
-
-#         plt.scatter(df.loc[indices_num_imputados, 'Spin_period'],
-#                     df.loc[indices_num_imputados, 'Period'],
-#                     s=50, facecolors='none', edgecolors='black',
-#                     linewidth=.4, label='Imputación Numérica (Spin/Period)')
-
-#         plt.scatter(df.loc[indices_class_imputados, 'Spin_period'],
-#                     df.loc[indices_class_imputados, 'Period'],
-#                     s=50, facecolors='none', edgecolors='blue',
-#                     linewidth=.4, marker='s', label='Imputación Class')
-
-#         plt.title(f'Diagrama de Corbett con imputaciones marcadas para {num_valid_systems_imputed}\n'
-#                 f'Método numérico: {metodo_num} | Método categórico: {metodo_cat}')
-#         plt.xscale('log')
-#         plt.yscale('log')
-#         plt.xlabel('Spin_period')
-#         plt.ylabel('Period')
-#         plt.legend(title='Clase', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
-#         plt.tight_layout()
-#         plt.show()
-
-
-
 
 
 
@@ -575,51 +490,9 @@ def correlation_matrices(df_comparacion, numeric_cols_to_use):
 #         plt.grid(False)
 #         plt.show()
         
-#     def Corbet_Diagram_plot(self):
-#         """
-#         Draw the Corbet Diagram using the data from the 'Fortin' class.
-#         """
-#         mask_valid = ~np.isnan(self.period) & ~np.isnan(self.spin_period)
 
-#         valid_period = self.period[mask_valid]
-#         valid_spin_period = self.spin_period[mask_valid]
-#         valid_classes = self.classes[mask_valid]
 
-#         total_objects = len(self.period)
-#         valid_objects = len(valid_period)
 
-#         valid_classes = [str(cls).strip() for cls in valid_classes]
-
-#         valid_classes = np.array([cls if cls != "" and cls != "nan" else "Unknown" for cls in valid_classes])
-
-#         unique_classes = np.unique(valid_classes)
-#         colors = plt.cm.tab20.colors[:len(unique_classes)]
-#         markers = ['o', '^', 'x', '*', 's', 'D', 'p', 'h', 'v', '<', '>', 'X']
-
-#         class_styles = {
-#             cls: {'color': colors[i % len(colors)], 'marker': markers[i % len(markers)]}
-#             for i, cls in enumerate(unique_classes)
-#         }
-
-#         fig, ax = plt.subplots(figsize=(8, 5))
-
-#         for cls in class_styles.keys():
-#             mask = valid_classes == cls
-#             ax.scatter(valid_period[mask], valid_spin_period[mask], 
-#                        color=class_styles[cls]['color'], 
-#                        marker=class_styles[cls]['marker'], 
-#                        label=cls if len(valid_period[mask]) > 0 else "")
-
-#         ax.set_title(f"Corbet Diagram for Fortin catalogue ({valid_objects} objects with valid parameters out of {total_objects} total)")
-#         ax.set_xlabel("Log(Orbital Period)")
-#         ax.set_ylabel("Log(Spin Period)")
-#         ax.set_yscale("log")
-#         ax.set_xscale("log")
-#         ax.grid()
-
-#         ax.legend(title="Class", loc='upper right')
-
-#         plt.show()
         
 #     def plot_log_histogram_geometric_mean(self, data, bins_per_decade=8, color='blue'):
 #         """

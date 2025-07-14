@@ -113,6 +113,9 @@ For imputation
 
 - [Categorical Values: Knowledge Distillation](https://en.wikipedia.org/wiki/Knowledge_distillation)
 
+- [KNN Imputer python example with pipelines](https://www-geeksforgeeks-org.translate.goog/machine-learning/handling-missing-data-with-knn-imputer/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc)
+
+
 EMCEE:
 
 - [Original Proposal -> Data analysis recipes: Fitting a model to data, David W. Hogg, Jo Bovy, Dustin Lang (2010)](https://arxiv.org/pdf/2111.13806)
