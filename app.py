@@ -1,5 +1,9 @@
 import streamlit as st
 import os
+import sys
+sys.path.append('./Python_Scripts')  # añade esta línea al inicio
+
+from Load_Data import load_catalogs
 
 # Título principal
 st.title("HMXB Catalog Explorer")
@@ -15,7 +19,7 @@ image_folder = "Images"
 image_files = [f for f in os.listdir(image_folder) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
 for img in image_files:
-    st.image(os.path.join(image_folder, img), caption=img, use_column_width=True)
+    st.image(os.path.join(image_folder, img), caption=img, use_container_width=True)
 
 # Explorar archivos de datasets (opcional)
 st.header("📂 Available Catalogs")
