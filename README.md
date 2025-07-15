@@ -139,6 +139,13 @@ Complex fractal analysis:
 
 - [Evolution of fractality in space plasmas of interest to geomagnetic activity](https://ui.adsabs.harvard.edu/abs/2018NPGeo..25..207M/abstract) and [Complex Network Study of Solar Magnetograms](https://ui.adsabs.harvard.edu/abs/2022Entrp..24..753M/abstract).
 
+
+
+### NASA ADS API
+
+- [API Documentation for python use](https://github.com/adsabs/adsabs-dev-api/blob/master/API_documentation_Python/Search_API_Python.ipynb)
+
+
 ----
 
 Questions that have guided my understanding:
