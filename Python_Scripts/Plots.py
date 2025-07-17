@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import matplotlib.patches as patches
 
 
 def plot_missing_values_distribution(catalog, exclude_columns):
@@ -118,7 +119,9 @@ def highlight_missing_values(catalog, exclude_columns):
     return catalog_sorted[numeric_columns].style.applymap(highlight_missing)
 
 
-def corbet_diagram(df):
+
+
+def corbet_diagram(df, n_elipses=3):
     spin_col = next((col for col in df.columns if col.startswith('Spin_period') and col.endswith('_imputed')), None)
     period_col = next((col for col in df.columns if col.startswith('Period') and col.endswith('_imputed')), None)
     
@@ -127,24 +130,27 @@ def corbet_diagram(df):
         return
     
     df_valid = df.dropna(subset=[spin_col, period_col, 'Class_original'])
-    
+    top_classes = df_valid['Class_original'].value_counts().nlargest(n_elipses).index.tolist()
+
     plt.figure(figsize=(12, 6))
+    ax = plt.gca()
     markers = ['o', 's', 'D', '^', 'v', '<', '>']
     classes = np.unique(df_valid['Class_original'])
 
     for i, cls in enumerate(classes):
         class_data = df_valid[df_valid['Class_original'] == cls]
         sns.scatterplot(x=spin_col, y=period_col, data=class_data,
-                        marker=markers[i % len(markers)], label=f'Class {cls}', alpha=0.6)
+                        marker=markers[i % len(markers)], label=f'Class {cls}', alpha=0.6, ax=ax)
 
-    plt.title(f'Corbet Diagram for Fortin (final imputed data)')
+    plt.title('Corbet Diagram with Confidence Ellipses')
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel(spin_col)
     plt.ylabel(period_col)
-    plt.legend(title='Class', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    plt.legend(title='Class', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
     plt.show()
+
 
 
 def correlation_matrices(df_comparacion, numeric_cols_to_use):

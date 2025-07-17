@@ -11,14 +11,13 @@ from Plots import plot_missing_values_distribution, plot_missing_values_by_colum
 from Plots import correlation_matrices
 
 
-
 catalogs = load_catalogs()
 df_catalog = catalogs['cat_fortin']
 
-columns_not_interesting = ['ID', 'Name', 'ref', 'Ref', 'err', 'RA', 'Dec', 'var', 'Err', 'DE']
+columns_not_interesting = ['ID', 'Name', 'ref', 'Ref', 'err', 'RA', 'Dec', 'var', 'Err', 'DE', 'Superorbital Period']
 numeric_cols_to_use = ['Mx', 'Mo', 'Period',  'Eccentricity', 'RV','Spin_period']
 categoric_col_to_use = ['Class']
-n_systems=150
+n_systems=9
 divisor = 10
 n_neighbours = 5
 
@@ -132,7 +131,7 @@ styled = df_comparacion_display.style.apply(highlight_row, axis=1)
 
 display(styled)
 
-corbet_diagram(df_comparacion)
+# corbet_diagram(df_comparacion)
 correlation_matrices(df_comparacion, numeric_cols_to_use)
 
 
@@ -140,26 +139,6 @@ plot_missing_values_distribution(df_catalog, columns_not_interesting)
 plot_missing_values_by_column(df_catalog, columns_not_interesting)
 plot_conditional_probability_matrix(df_catalog, columns_not_interesting)
 highlight_missing_values(df_catalog, columns_not_interesting)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -187,3 +166,6 @@ highlight_missing_values(df_catalog, columns_not_interesting)
 # 9. What criteria or characteristics define the classes in the Class column?
 # 10. What role does orbital eccentricity (Eccentricity) play in the evolution of the system?
 # 11. Which systems or astronomical variables have the most impact on observable phenomena like pulsations or X-ray emissions?
+
+
+

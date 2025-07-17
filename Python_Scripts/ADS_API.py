@@ -1,3 +1,4 @@
+#%%
 import os
 import re
 
@@ -11,7 +12,7 @@ ADS_API_TOKEN = os.getenv("ADS_API_TOKEN")
 ads.config.token = ADS_API_TOKEN
 PAPERS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Papers'))
 os.makedirs(PAPERS_DIR, exist_ok=True)
-
+#%%
 authors = {
     "Fortin, F.",
     "Kim, V.",
@@ -91,3 +92,74 @@ for filename in os.listdir(folder):
             new_filename = new_basename + ext
             new_path = os.path.join(folder, new_filename)
             os.rename(old_path, new_path)
+
+#%%
+from Load_Data import load_catalogs
+data=load_catalogs()
+cat_fortin=data['cat_fortin']
+names=cat_fortin['Main_ID']
+#%%
+
+for index in range(len(names)):
+    N_documents = 1
+    name=names[index]
+    query_str = (
+        f'full:("{name}") AND full:catalog'#("Magellanic Cloud" OR "Milky Way")'
+    )
+
+    results = list(ads.SearchQuery(
+        q=query_str,
+        fl=['title', 'bibcode', 'author'],
+        rows=N_documents
+    ))
+
+    for r in results:
+        print(f"{r.title[0]} ({r.author[0]}) - {r.bibcode}")
+
+
+
+#%%
+def clasificar_por_distancia(distance_pc):
+    if distance_pc < 35000:
+        return "MW"
+    elif 45000 <= distance_pc <= 55000:
+        return "LMC"
+    elif 55000 < distance_pc <= 65000:
+        return "SMC"
+    else:
+        return "Indeterminado"
+cat_fortin['Procedencia_dist'] = cat_fortin['Distance'].apply(clasificar_por_distancia)
+import matplotlib.pyplot as plt
+
+cat_fortin['Procedencia_dist'].value_counts().plot(kind='bar', color='lightcoral')
+plt.title('Clasificación de objetos según distancia')
+plt.xlabel('Procedencia (por distancia)')
+plt.ylabel('Cantidad de objetos')
+plt.grid(axis='y', linestyle='--', alpha=0.6)
+plt.xticks(rotation=0)
+plt.tight_layout()
+plt.show()
+
+#%%
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+rv_data = cat_fortin['RV'].dropna()
+
+plt.figure(figsize=(12,5))
+
+plt.subplot(1, 2, 1)
+plt.hist(rv_data, bins=40, color='skyblue', edgecolor='black')
+plt.title('Histograma de Velocidad Radial (RV)')
+plt.xlabel('RV (km/s)')
+plt.ylabel('Frecuencia')
+
+plt.subplot(1, 2, 2)
+sns.kdeplot(rv_data, fill=True, color='salmon')
+plt.title('Densidad de Velocidad Radial (RV)')
+plt.xlabel('RV (km/s)')
+plt.ylabel('Densidad')
+
+plt.tight_layout()
+plt.show()
+
