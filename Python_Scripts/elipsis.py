@@ -31,20 +31,14 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
 
     cov = np.cov(x, y)
     pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
-    # Using a special case to obtain the eigenvalues of this
-    # two-dimensional dataset.
     ell_radius_x = np.sqrt(1 + pearson)
     ell_radius_y = np.sqrt(1 - pearson)
     ellipse = Ellipse((0, 0), width=ell_radius_x * 2, height=ell_radius_y * 2,
                       facecolor=facecolor, **kwargs)
 
-    # Calculating the standard deviation of x from
-    # the squareroot of the variance and multiplying
-    # with the given number of standard deviations.
     scale_x = np.sqrt(cov[0, 0]) * n_std
     mean_x = np.mean(x)
 
-    # calculating the standard deviation of y ...
     scale_y = np.sqrt(cov[1, 1]) * n_std
     mean_y = np.mean(y)
 
@@ -62,7 +56,6 @@ def get_correlated_dataset(n, dependency, mu, scale):
     dependent = latent.dot(dependency)
     scaled = dependent * scale
     scaled_with_offset = scaled + mu
-    # return x and y of the new, correlated dataset
     return scaled_with_offset[:, 0], scaled_with_offset[:, 1]
 
 
@@ -103,7 +96,6 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     if x.size != y.size:
         raise ValueError("x and y must be the same size")
 
-    # Transform data to log space
     log_x = np.log10(x)
     log_y = np.log10(y)
 
@@ -137,14 +129,12 @@ def get_correlated_dataset(n, dependency, mu, scale):
     scaled_with_offset = scaled + mu
     return scaled_with_offset[:, 0], scaled_with_offset[:, 1]
 
-# Generate dataset
 dependency_nstd = [[0.8, 0.75],
                    [-0.2, 0.35]]
 mu = 0, 0
 scale = 8, 5
 x, y = get_correlated_dataset(500, dependency_nstd, mu, scale)
 
-# Filter invalid values
 valid_indices = (x > 0) & (y > 0)
 x = x[valid_indices]
 y = y[valid_indices]
@@ -152,7 +142,6 @@ y = y[valid_indices]
 print("Filtered x values:", x)
 print("Filtered y values:", y)
 
-# Plot log scale (with ellipses)
 fig, ax_log = plt.subplots(figsize=(6, 6))
 ax_log.axvline(c='grey', lw=1)
 ax_log.axhline(c='grey', lw=1)

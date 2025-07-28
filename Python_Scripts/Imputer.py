@@ -169,3 +169,171 @@ highlight_missing_values(df_catalog, columns_not_interesting)
 
 
 
+
+
+
+
+
+
+#%%
+import optuna
+import numpy as np
+import pandas as pd
+from sklearn.impute import KNNImputer
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, OrdinalEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from Load_Data import load_catalogs
+import optuna.samplers
+
+
+np.random.seed(42)
+
+catalogs = load_catalogs()
+df_catalog = catalogs['cat_fortin']
+
+numeric_cols_to_use = ['Mx', 'Mo', 'Period', 'RV','Spin_period', "Eccentricity"]
+categoric_col_to_use = ['Class']
+columns_to_consider = numeric_cols_to_use + categoric_col_to_use
+
+n_systems = 9
+n_trials = 300
+
+df_original = (
+    df_catalog[[*columns_to_consider, 'Main_ID']]
+    .assign(non_null_count=lambda df: df.notna().sum(axis=1))
+    .sort_values(by='non_null_count', ascending=False)
+    .drop(columns='non_null_count')
+    .head(n_systems)
+    .reset_index(drop=True)
+)
+
+
+
+# Si es None, se optimizan todas las columnas (multiobjetivo); si es una str, se optimiza solo esa
+opt_parameter = "Mx"  # Ejemplo: opt_parameter = "Period"
+
+
+def objective(trial):
+    np.random.seed(42)
+    n_neighbors = trial.suggest_int("n_neighbors", 2, 15)
+    weights = trial.suggest_categorical("weights", ["uniform", "distance"])
+    scaler_name = trial.suggest_categorical("scaler", ["standard", "minmax", "robust", "none"])
+
+    if scaler_name == "standard":
+        scaler = StandardScaler()
+    elif scaler_name == "minmax":
+        scaler = MinMaxScaler()
+    elif scaler_name == "robust":
+        scaler = RobustScaler()
+    else:
+        scaler = None
+
+    numerical_steps = [('imputer', KNNImputer(n_neighbors=n_neighbors, weights=weights))]
+    if scaler is not None:
+        numerical_steps.append(('scaler', scaler))
+    numerical_pipeline = Pipeline(numerical_steps)
+    
+    categorical_pipeline = Pipeline(steps=[
+        ('encoder', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        ('imputer', KNNImputer(n_neighbors=n_neighbors))  
+        ])
+
+
+    preprocessor = ColumnTransformer([
+        ('num', numerical_pipeline, numeric_cols_to_use),
+        ('cat', categorical_pipeline, categoric_col_to_use)
+    ])
+
+    errors_por_col = {col: [] for col in numeric_cols_to_use}
+
+    for i in range(n_systems):
+        for col in numeric_cols_to_use:
+            df_with_nan = df_original.drop(columns='Main_ID').copy()
+            true_value = df_with_nan.loc[i, col]
+            df_with_nan.loc[i, col] = np.nan
+
+            np.random.seed(42)
+            df_imputed_array = preprocessor.fit_transform(df_with_nan)
+            df_imputed = pd.DataFrame(df_imputed_array, columns=columns_to_consider, index=df_with_nan.index)
+
+            imputed_value = df_imputed.loc[i, col]
+            error_rel = np.abs((imputed_value - true_value) / true_value)
+            errors_por_col[col].append(error_rel)
+
+    if opt_parameter is None:
+        return [np.mean(errors_por_col[col]) for col in numeric_cols_to_use]
+    else:
+        return np.mean(errors_por_col[opt_parameter])
+
+
+
+sampler = optuna.samplers.TPESampler(seed=42)  # o RandomSampler(seed=42)
+
+if opt_parameter is None:
+    study = optuna.create_study(directions=["minimize"] * len(numeric_cols_to_use), sampler=sampler)
+else:
+    study = optuna.create_study(direction="minimize", sampler=sampler)
+
+
+
+study.optimize(objective, n_trials=n_trials)
+
+print("Best trials:", study.best_trials)
+
+
+if opt_parameter is None:
+    best_params = study.best_trials[0].params
+else:
+    best_params = study.best_params
+
+
+
+scaler_map = {
+    "standard": StandardScaler(),
+    "minmax": MinMaxScaler(),
+    "robust": RobustScaler(),
+    "none": None
+}
+scaler = scaler_map[best_params["scaler"]]
+
+numerical_steps = [('imputer', KNNImputer(n_neighbors=best_params["n_neighbors"]))]
+if scaler is not None:
+    numerical_steps.append(('scaler', scaler))
+numerical_pipeline = Pipeline(numerical_steps)
+
+categorical_pipeline = Pipeline(steps=[
+    ('encoder', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+    ('imputer', KNNImputer(n_neighbors=best_params["n_neighbors"]))
+])
+
+preprocessor = ColumnTransformer([
+    ('num', numerical_pipeline, numeric_cols_to_use),
+    ('cat', categorical_pipeline, categoric_col_to_use)
+])
+
+error_relativos = pd.DataFrame(index=df_original['Main_ID'], columns=numeric_cols_to_use, dtype=float)
+
+for i in range(n_systems):
+    for col in numeric_cols_to_use:
+        df_with_nan = df_original.drop(columns='Main_ID').copy()
+        true_value = df_with_nan.loc[i, col]
+        df_with_nan.loc[i, col] = np.nan
+
+        np.random.seed(42)
+        df_imputed_array = preprocessor.fit_transform(df_with_nan)
+        df_imputed = pd.DataFrame(df_imputed_array, columns=columns_to_consider, index=df_with_nan.index)
+
+        imputed_value = df_imputed.loc[i, col]
+        error_rel = np.abs((imputed_value - true_value) / true_value)
+        error_relativos.loc[df_original.loc[i, 'Main_ID'], col] = error_rel
+
+promedios = error_relativos.mean(axis=0)
+error_relativos.loc['Mean_Relative_Error'] = promedios
+
+error_relativos
+#%%
+best_params
+
+#%%
+df_original

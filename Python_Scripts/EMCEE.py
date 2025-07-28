@@ -2,17 +2,32 @@
 #    use this link https://emcee.readthedocs.io/en/stable/tutorials/line/
 #########################################################################
 #%%
+%%latex
+\begin{align}
+T^2 &= \frac{4\pi^2 a^3}{G(M_1 + M_2)}
+\end{align}
+
+
+#%%
 import pandas as pd
 import numpy as np
 import emcee
 import corner
 import matplotlib.pyplot as plt
-
+import scipy.stats as stats
+from tqdm.notebook import tqdm
 from Load_Data import load_catalogs
 catalogs = load_catalogs()
 cat_fortin = catalogs['cat_fortin']
+cat_neuman = catalogs['cat_neumann']
 
-filtered_df = cat_fortin.dropna(subset=['RV', 'Period', 'Mo', 'Mx'])
+#%%
+cat_fortin['Period_err']
+cat_fortin['RV_err']
+cat_fortin['Mo_err']
+#%%
+required_cols = ['RV', 'Period', 'Mo', 'Mx', 'RV_err', 'Period_err', 'Mo_err']
+filtered_df = cat_fortin.dropna(subset=required_cols)
 
 G = 6.67430e-11            # m^3 kg^-1 s^-2
 Msun = 1.98847e30          # kg
@@ -20,11 +35,10 @@ day = 86400                # s
 
 K_err_kms = 3  
 
-priors = [
-    (1.0, 10.0),
-    # (2.0, 15.0),
-    # (5.0, 20.0)
-]
+Mx_data = filtered_df['Mx'].dropna().values
+
+alpha = 3 
+Mmin, Mmax = Mx_data.min(), Mx_data.max()
 
 def mass_function(M2, M1_obs, inclination_rad):
     sin_i = np.sin(inclination_rad)
@@ -32,88 +46,199 @@ def mass_function(M2, M1_obs, inclination_rad):
     denominator = (M1_obs + M2)**2
     return numerator / denominator
 
-def log_likelihood(theta, K_obs, P_obs, M1_obs, K_err):
+def log_likelihood(theta, K_obs, P_obs, M1_obs, K_err, P_err, M1_err):
     M2, cos_i = theta
     if M2 <= 0 or not (0 < cos_i < 1):
         return -np.inf
     i_rad = np.arccos(cos_i)
     f_M = mass_function(M2 * Msun, M1_obs * Msun, i_rad)
     K_pred = ((2 * np.pi * G * f_M) / P_obs)**(1/3)
+
     return -0.5 * ((K_obs - K_pred)**2 / K_err**2 + np.log(2 * np.pi * K_err**2))
 
-def log_prior(theta, M2_min, M2_max):
+def log_prior(theta):
     M2, cos_i = theta
-    if M2_min < M2 < M2_max and 0 < cos_i < 1:
-        return 0.0
-    return -np.inf
+    if not (Mmin < M2 < Mmax) or not (0 < cos_i < 1):
+        return -np.inf
+    norm = (1 - alpha) / (Mmax**(1 - alpha) - Mmin**(1 - alpha))
+    prior_M2 = norm * M2**(-alpha)
+    return np.log(prior_M2)
 
-def log_posterior(theta, K_obs, P_obs, M1_obs, K_err, M2_min, M2_max):
-    lp = log_prior(theta, M2_min, M2_max)
+
+def log_posterior(theta, K_obs, P_obs, M1_obs, K_err, P_err, M1_err):
+    lp = log_prior(theta)
     if not np.isfinite(lp):
         return -np.inf
-    return lp + log_likelihood(theta, K_obs, P_obs, M1_obs, K_err)
+    return lp + log_likelihood(theta, K_obs, P_obs, M1_obs, K_err, P_err, M1_err)
 
 def compute_semi_major_axis(M2_array, M1_obs, P_obs):
     total_mass = (M1_obs + M2_array) * Msun
     a_cubed = (G * total_mass * (P_obs)**2) / (4 * np.pi**2)
-    return (a_cubed**(1/3)) / (6.957e8)  
+    return (a_cubed**(1/3)) / (6.957e8) 
 
-for prior_index, (M2_min, M2_max) in enumerate(priors):
-    print(f"\n=== Prior {prior_index+1}: M2 ∈ [{M2_min}, {M2_max}] M_sun ===")
+tryer = []
 
-    results = []
+for index, row in tqdm(filtered_df.iterrows(), total=len(filtered_df), desc="Procesando sistemas"):
+    P_obs_days = row['Period']
+    K_obs_kms = row['RV']
+    M1_obs_Msun = row['Mo']
+    Mx_true = row['Mx']
+    main_id = row['Main_ID']
 
-    for index, row in filtered_df.iterrows():
-        P_obs_days = row['Period']
-        K_obs_kms = row['RV']
-        M1_obs_Msun = row['Mo']
-        Mx_true = row['Mx']
+    P_obs = P_obs_days * day
+    K_obs = K_obs_kms * 1000
+    K_err = row['RV_err'] * 1000  # km/s → m/s
+    P_err = row['Period_err'] * day  # días → segundos
+    M1_err = row['Mo_err']  # en masas solares
 
-        P_obs = P_obs_days * day
-        K_obs = K_obs_kms * 1000
-        K_err = K_err_kms * 1000
-        M1_obs = M1_obs_Msun
+    M1_obs = M1_obs_Msun
 
-        ndim = 2
-        nwalkers = 50
-        nsteps = 3000
-        initial_guess = [np.mean([M2_min, M2_max]), 0.5]
-        pos = initial_guess + 1e-4 * np.random.randn(nwalkers, ndim)
+    ndim = 2
+    nwalkers = 15
+    nsteps = 3000
 
-        sampler = emcee.EnsembleSampler(
-            nwalkers, ndim, log_posterior,
-            args=(K_obs, P_obs, M1_obs, K_err, M2_min, M2_max)
-        )
-        sampler.run_mcmc(pos, nsteps, progress=False)
+    pos = np.empty((nwalkers, ndim))
+    pos[:, 0] = np.random.uniform(Mmin, Mmax, nwalkers)  # M2
+    pos[:, 1] = np.random.uniform(0.01, 0.99, nwalkers)  # cos(i)
 
-        samples = sampler.get_chain(discard=1000, thin=10, flat=True)
-        M2_samples = samples[:, 0]
-        cos_i_samples = samples[:, 1]
-        i_samples_deg = np.degrees(np.arccos(cos_i_samples))
+    sampler = emcee.EnsembleSampler(
+        nwalkers, ndim, log_posterior,
+        args=(K_obs, P_obs, M1_obs, K_err, P_err, M1_err)
+    )
 
-        a_samples_Rsun = compute_semi_major_axis(M2_samples, M1_obs, P_obs)
+    sampler.run_mcmc(pos, nsteps, progress=False)
 
-        M2_median = np.median(M2_samples)
-        i_median = np.median(i_samples_deg)
-        a_median = np.median(a_samples_Rsun)
+    samples = sampler.get_chain(discard=1000, thin=10, flat=True)
+    M2_samples = samples[:, 0]
+    cos_i_samples = samples[:, 1]
+    i_samples_deg = np.degrees(np.arccos(cos_i_samples))
 
-        rel_diff = np.abs(M2_median - Mx_true) / Mx_true
+    a_samples_Rsun = compute_semi_major_axis(M2_samples, M1_obs, P_obs)
 
-        results.append({
-            'System_Index': index,
-            'M2_median_Msun': M2_median,
-            'i_median_deg': i_median,
-            'a_median_Rsun': a_median,
-            'Mx': Mx_true,
-            'Rel_Diff_M2_vs_Mx': rel_diff
-        })
+    M2_median = np.median(M2_samples)
+    i_median = np.median(i_samples_deg)
+    a_median = np.median(a_samples_Rsun)
 
-    results_df = pd.DataFrame(results)
-    results_df.set_index('System_Index', inplace=True)
-    print(results_df[['M2_median_Msun', 'i_median_deg', 'a_median_Rsun', 'Mx', 'Rel_Diff_M2_vs_Mx']])
+    rel_diff = np.abs((M2_median - Mx_true) / Mx_true)
+
+    tryer.append({
+        'Main_ID': main_id,
+        'M2_median_Msun': M2_median,
+        'i_median_deg': i_median,
+        'a_median_Rsun': a_median,
+        'Mx': Mx_true,
+        'Rel_Diff_M2_vs_Mx': rel_diff
+    })
+
+tryer_df = pd.DataFrame(tryer)
+tryer_df.set_index('Main_ID', inplace=True)
+tryer_df[['M2_median_Msun', 'i_median_deg', 'a_median_Rsun', 'Mx', 'Rel_Diff_M2_vs_Mx']]
+#%%
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+
+K_err_kms = 3  
+
+Mx_data = filtered_df['Mx'].dropna().values
+mu_prior, std_prior = np.mean(Mx_data), np.std(Mx_data)
+lista = [0]
+for index_example in lista:#range(len(Mx_data)):
+    row = filtered_df.iloc[index_example]
+
+    P_obs_days = row['Period']
+    K_obs_kms = row['RV']
+    M1_obs_Msun = row['Mo']
+    Mx_true = row['Mx']
+    main_id = row['Main_ID']
+
+    P_obs = P_obs_days * day
+    K_obs = K_obs_kms * 1000
+    K_err = K_err_kms * 1000
+    M1_obs = M1_obs_Msun
+
+    mass_range = np.linspace(0.1, 20, 500)
+
+    def mass_function(M2, M1_obs, inclination_rad):
+        sin_i = np.sin(inclination_rad)
+        numerator = (M2 * sin_i)**3
+        denominator = (M1_obs + M2)**2
+        return numerator / denominator
+
+    def prior_mass(m):
+        return stats.norm.pdf(m, loc=mu_prior, scale=std_prior)
+
+    def likelihood_mass(m):
+        cos_i = -0.
+        i_rad = np.arccos(cos_i)
+        f_M = mass_function(m * Msun, M1_obs * Msun, i_rad)
+        K_pred = ((2 * np.pi * G * f_M) / P_obs)**(1/3)
+        return stats.norm.pdf(K_obs, loc=K_pred, scale=K_err)
+
+    def posterior_mass(m):
+        return prior_mass(m) * likelihood_mass(m)
+
+
+    prior_vals = prior_mass(mass_range)
+    prior_vals /= prior_vals.sum()
+
+    likelihood_vals = likelihood_mass(mass_range)
+    likelihood_vals /= likelihood_vals.sum()
+
+    posterior_vals = posterior_mass(mass_range)
+    posterior_vals /= posterior_vals.sum()
+
+    plt.figure(figsize=(10,6))
+    plt.plot(mass_range, prior_vals, label='Prior (Gaussiano de Mx)', color='blue')
+    plt.plot(mass_range, likelihood_vals, label='Likelihood (Velocidad Radial)', color='green')
+    plt.plot(mass_range, posterior_vals, label='Posterior', color='red')
+    plt.axvline(Mx_true, color='black', linestyle='--', label='Mx Observado')
+    plt.xlabel('Masa $M_2$ [$M_\\odot$]')
+    plt.ylabel('Distribución Normalizada')
+    plt.title(f'Distribuciones para el sistema {main_id}')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+
+#%%
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 5))
+plt.hist(cat_fortin["Mx"], bins=30, color='skyblue', edgecolor='black')
+plt.title("Distribución de Mx en cat_fortin")
+plt.xlabel("Mx")
+plt.ylabel("Frecuencia")
+plt.grid(True)
+plt.show()
+
+plt.figure(figsize=(8, 5))
+plt.hist(cat_fortin["Mo"], bins=30, color='skyblue', edgecolor='black')
+plt.title("Distribución de Mx en cat_fortin")
+plt.xlabel("Mx")
+plt.ylabel("Frecuencia")
+plt.grid(True)
+plt.show()
+
+#%%
+for col in cat_neuman.columns:
+    print(col)
 
 
 
@@ -278,7 +403,7 @@ results_dict['gaussian_centered_10_isotropic_uniform']
 #%%
 #########################################################################
 #                           Now for a cuadratic function
-#########################################################################import numpy as np
+#########################################################################
 import numpy as np
 import matplotlib.pyplot as plt
 import emcee
@@ -341,3 +466,6 @@ plt.xlabel("x")
 plt.ylabel("y")
 plt.title(f"Ajuste polinomial de grado {grado}")
 plt.show()
+
+
+

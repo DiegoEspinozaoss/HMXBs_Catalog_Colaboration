@@ -1,3 +1,4 @@
+#%%
 from Load_Data import load_catalogs
 import pandas as pd
 import numpy as np
@@ -86,4 +87,9 @@ def Joined_Catalogs():
 
     return final_dataframe, df_columns
 
-#EXAMPLE OF USE: matched_by_all_ids, df_columns = Joined_Catalogs()
+matched_by_all_ids, df_columns = Joined_Catalogs()
+#%%
+# Filtrar valores no nulos en la columna 'CRSF' y convertir a lista
+crsf_values = matched_by_all_ids['CRSF'].dropna().tolist()
+
+print(crsf_values)

@@ -3,7 +3,11 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 import matplotlib.patches as patches
-
+from astroquery.simbad import Simbad
+from astropy.coordinates import SkyCoord
+from astropy import units as u
+from urllib.parse import urlencode
+from astropy.io import fits
 
 def plot_missing_values_distribution(catalog, exclude_columns):
     """
@@ -184,6 +188,65 @@ def correlation_matrices(df_comparacion, numeric_cols_to_use):
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.show()
 
+
+
+
+def fetch_and_display_dss_images(object_catalog_df, max_objects=5):
+    """
+    Fetch and display DSS images centered on celestial objects listed in a catalog.
+
+    Parameters
+    ----------
+    object_catalog_df : pandas.DataFrame
+        DataFrame containing at least the column 'Main_ID' with object names.
+    max_objects : int, optional
+        Number of objects from the catalog to process (default is 5).
+
+    Process
+    -------
+    For each object in the catalog (up to max_objects):
+    1. Query SIMBAD for coordinates (RA, Dec).
+    2. Build a URL to fetch a DSS FITS image centered on the object with a 2 arcmin field of view.
+    3. Download and open the FITS image.
+    4. Display the image with a colorbar and the object name as title.
+    """
+
+    for index in range(max_objects):
+        object_name = object_catalog_df['Main_ID'].iloc[index]
+        print(f"\nProcessing object: {object_name}")
+
+        simbad_result = Simbad.query_object(object_name)
+
+        if simbad_result is None:
+            print(f"Object not found in SIMBAD: {object_name}")
+            continue
+
+        ra_string = simbad_result['ra'][0]   
+        dec_string = simbad_result['dec'][0] 
+        sky_coord = SkyCoord(ra_string, dec_string, unit=(u.hourangle, u.deg), frame='icrs')
+
+        hips_query_params = {
+            'hips': 'DSS',
+            'object': object_name,
+            'ra': sky_coord.ra.value,
+            'dec': sky_coord.dec.value,
+            'fov': (2 * u.arcmin).to(u.deg).value,  
+            'width': 1000,
+            'height': 1000
+        }
+
+        hips_query_url = f"http://alasky.u-strasbg.fr/hips-image-services/hips2fits?{urlencode(hips_query_params)}"
+        print(f"Fetching image from: {hips_query_url}")
+
+        hdulist = fits.open(hips_query_url)
+        image_data = hdulist[0].data
+        print(repr(hdulist[0].header))
+        hdulist.close()
+
+        plt.imshow(image_data, origin='lower', cmap='gray')
+        plt.title(object_name)
+        plt.colorbar(label='Pixel value')
+        plt.show()
 
 
 

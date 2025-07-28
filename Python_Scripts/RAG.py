@@ -1,3 +1,4 @@
+#%%
 import os
 from typing import List
 from dotenv import load_dotenv
@@ -93,8 +94,8 @@ vectorstore = build_vectorstore_from_documents(documents)
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 rag_chain = build_rag_chain(llm, retriever, format_documents, rag_template, language="english")
 
-
-question = "What are the main catalogs of high-mass X-ray binaries mentioned in these papers?"
+#%%
+question = "How do you think i can make a simulation of the missing parameters from this papers?"
 answer = rag_chain.invoke(question)
 
 print("RAG Answer:\n", answer)
