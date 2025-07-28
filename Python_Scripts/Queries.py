@@ -306,6 +306,7 @@ for r in results:
 
 
 ########################################################################################
+#%%
 from Load_Data import load_catalogs
 from lightkurve import search_lightcurve
 import lightkurve as lk
@@ -317,9 +318,9 @@ import datetime
 
 import numpy as np
 import matplotlib.pyplot as plt
-from lightkurve import search_lightcurve
-
-def plot_all_lightcurves_and_periodogram(cat_fortin, system_index=0):
+from lightkurve import search_lightcurve, search_targetpixelfile
+#%%
+def plot_all_lightcurves(cat_fortin, system_index=0):
     title_size = 16
     label_size = 14
     line_width = 1.2
@@ -363,7 +364,7 @@ def plot_all_lightcurves_and_periodogram(cat_fortin, system_index=0):
 catalogs = load_catalogs()
 fortin = catalogs['cat_fortin']
 for i in range(len(fortin)):
-    plot_all_lightcurves_and_periodogram(fortin, system_index=i)
+    plot_all_lightcurves(fortin, system_index=i)
 
 
 #%%
@@ -474,3 +475,7 @@ for i, df in enumerate(rows_detected):
 #     print("\nNo hay catálogos con 'X-ray' ni 'binaries' encontrados.")
 
 
+#%%
+tpf = search_targetpixelfile('KIC 6922244', author="Kepler", cadence="long", quarter=4).download()
+lc = tpf.to_lightcurve(aperture_mask=tpf.pipeline_mask)
+lc.plot();

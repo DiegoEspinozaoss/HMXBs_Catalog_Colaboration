@@ -150,27 +150,6 @@ highlight_missing_values(df_catalog, columns_not_interesting)
 
 
 
-# Questions about data and variables
-# 1. What physical or astronomical interpretations can we give to the variables Mx, Mo, Period, Eccentricity, RV, and Spin_period?
-# 2. Which of these variables tend to be more reliable or have less observational error?
-# 3. How do missing values typically affect astronomical catalogs, and what methods are commonly used in astronomy to handle them?
-# 4. In your experience, which categorical variables (like Class) are most relevant for classifying stellar systems?
-
-# Questions about analysis and results
-# 5. How important is it to analyze the correlation between variables like Period, Eccentricity, and Spin_period in binary systems?
-# 6. Are there physical relationships or theoretical models that explain the observed correlations?
-# 7. What additional information could be sought in the catalog to improve statistical and predictive analyses?
-# 8. How would you assess data quality after imputing missing values? What metrics or validations do you recommend?
-
-# Questions to better understand the systems
-# 9. What criteria or characteristics define the classes in the Class column?
-# 10. What role does orbital eccentricity (Eccentricity) play in the evolution of the system?
-# 11. Which systems or astronomical variables have the most impact on observable phenomena like pulsations or X-ray emissions?
-
-
-
-
-
 
 
 
